@@ -1,0 +1,73 @@
+version : '3.3'
+services:
+  prod-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      ENV: prod
+    ports:
+      - "10081:80"
+    volumes:
+      - "./:/var/www/html"
+    networks:
+      pay-net:
+        ipv4_address: 172.22.0.2
+
+  pay-server-api:
+    image: clue/json-server
+    environment:
+      ENV: prod
+    ports:
+      - "20081:80"
+    volumes:
+      - "./deploy/db/data.json:/data/db.json"
+    networks:
+      pay-net:
+        ipv4_address: 172.22.0.3
+
+  pay-core-api:
+    image: clue/json-server
+    environment:
+      ENV: prod
+    ports:
+      - "20082:80"
+    volumes:
+      - "./deploy/db/data.json:/data/db.json"
+    networks:
+      pay-net:
+        ipv4_address: 172.22.0.4
+
+  pay-server-api1:
+    image: clue/json-server
+    environment:
+      ENV: prod
+    ports:
+      - "20085:80"
+    volumes:
+      - "./deploy/db/data.json:/data/db.json"
+    networks:
+      pay-net:
+        ipv4_address: 172.22.0.5
+
+  pay-server-api2:
+    image: clue/json-server
+    environment:
+      ENV: prod
+    ports:
+      - "20086:80"
+    volumes:
+      - "./deploy/db/data.json:/data/db.json"
+    networks:
+      pay-net:
+        ipv4_address: 172.22.0.6
+
+
+networks:
+  pay-net:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.22.0.0/24"
+          gateway: 172.22.0.1
